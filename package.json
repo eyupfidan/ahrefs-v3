@@ -1,14 +1,29 @@
 {
   "name": "ahrefs-v3",
-  "version": "1.0.2",
-  "description": "",
+  "version": "1.0.3",
+  "description": "A user-friendly Node.js client for the Ahrefs API v3. With this package, users can conveniently access Ahrefs' comprehensive SEO data and analysis tools directly from their Node.js applications.",
   "main": "dist/src/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/eyupfidan/ahrefs-v3.git"
+  },
+  "keywords": [
+    "ahrefs",
+    "api",
+    "v3",
+    "seo",
+    "analysis",
+    "data"
+  ],
+  "author": "Eyüp Fidan",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/eyupfidan/ahrefs-v3/issues"
+  },
+  "homepage": "https://github.com/eyupfidan/ahrefs-v3#readme",
   "dependencies": {
     "axios": "^1.4.0"
   },
