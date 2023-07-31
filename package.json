@@ -1,6 +1,6 @@
 {
   "name": "ahrefs-v3",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "A user-friendly Node.js client for the Ahrefs API v3. With this package, users can conveniently access Ahrefs' comprehensive SEO data and analysis tools directly from their Node.js applications.",
   "main": "dist/src/index.js",
   "scripts": {
