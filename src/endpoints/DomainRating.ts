@@ -1,23 +1,33 @@
-import axios, { AxiosResponse } from 'axios';
+import axios, { AxiosInstance } from "axios";
 
-export class DomainRating {
-    token: string;
+class DomainRating {
+  private apiClient: AxiosInstance;
 
-    constructor(token: string) {
-        this.token = token;
-    }
+  constructor(private token: string) {
+    this.apiClient = axios.create({
+      baseURL: "https://api.ahrefs.com/v3/site-explorer",
+      headers: {
+        Accept: "application/json, application/xml",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+  }
 
-    async get(domain: string): Promise<AxiosResponse> {
-        try {
-            const response = await axios.get(`https://api.ahrefs.com/v3/site-explorer/domain-rating?target=${domain}`, {
-                headers: {
-                    'Accept': 'application/json, application/xml',
-                    'Authorization': `Bearer ${this.token}`
-                }
-            });
-            return response.data;
-        } catch (error) {
-            throw error;
-        }
-    }
+  get(
+    domain: string,
+    date: string,
+    output: "json" | "csv" | "xml" | "php" = "json",
+    protocol: "both" | "http" | "https" = "both"
+  ): Promise<any> {
+    return this.apiClient.get("/domain-rating", {
+      params: {
+        target: domain,
+        date: date,
+        output: output,
+        protocol: protocol,
+      },
+    });
+  }
 }
+
+export { DomainRating };
