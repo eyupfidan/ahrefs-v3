@@ -1,8 +1,26 @@
 # Ahrefs API v3 Node.js Client
 
-A small, type-friendly npm package for calling Ahrefs API v3 from Node.js and TypeScript projects.
+<p align="center">
+  <strong>Type-friendly Ahrefs API v3 client for Node.js and TypeScript.</strong>
+</p>
 
-The client follows the current Ahrefs API v3 resource structure and exposes methods for every endpoint listed in the official documentation: Site Explorer, Keywords Explorer, Site Audit, Rank Tracker, SERP Overview, Batch Analysis, Subscription Information, Management, Brand Radar, Web Analytics, GSC Insights, Social Media, and Public endpoints.
+<p align="center">
+  <a href="https://www.npmjs.com/package/ahrefs-v3"><img alt="npm version" src="https://img.shields.io/npm/v/ahrefs-v3.svg?style=flat-square"></a>
+  <a href="https://www.npmjs.com/package/ahrefs-v3"><img alt="npm downloads" src="https://img.shields.io/npm/dm/ahrefs-v3.svg?style=flat-square"></a>
+  <a href="./LICENSE"><img alt="license" src="https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square"></a>
+  <img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-ready-3178c6.svg?style=flat-square">
+  <img alt="Node.js" src="https://img.shields.io/badge/Node.js-18%2B-339933.svg?style=flat-square">
+</p>
+
+`ahrefs-v3` is a small, modern SDK for calling the Ahrefs API v3 from JavaScript and TypeScript applications. It follows the Ahrefs API resource model and exposes ergonomic namespaces for Site Explorer, Keywords Explorer, Site Audit, Rank Tracker, SERP Overview, Batch Analysis, Subscription Information, Management, Brand Radar, Web Analytics, GSC Insights, Social Media, and Public endpoints.
+
+## Highlights
+
+- **Typed request/response primitives** through shared TypeScript exports such as `AhrefsRequestOptions`, `AhrefsResponse`, and `RequestMethod`.
+- **Resource-based API surface** that mirrors Ahrefs API v3 namespaces, for example `ahrefs.siteExplorer.domainRating()`.
+- **Readable endpoint aliases** with both friendly method names and HTTP-verb aliases, for example `domainRating()` and `getDomainRating()`.
+- **Configurable transport layer** with custom base URL, timeout, headers, request body support, and `AbortSignal` support.
+- **Maintainable source layout** split into client composition, HTTP transport, endpoint definitions, resources, constants, and types.
 
 ## Installation
 
@@ -11,6 +29,8 @@ npm install ahrefs-v3
 ```
 
 ## Quick start
+
+### CommonJS
 
 ```js
 const { AhrefsClient } = require("ahrefs-v3");
@@ -33,7 +53,7 @@ async function main() {
 main().catch(console.error);
 ```
 
-TypeScript:
+### TypeScript / ESM
 
 ```ts
 import AhrefsClient from "ahrefs-v3";
@@ -46,11 +66,34 @@ const { data } = await ahrefs.keywordsExplorer.overview({
     keywords: ["seo", "keyword research"],
   },
 });
+
+console.log(data);
 ```
+
+## API client
+
+```ts
+import { AhrefsClient } from "ahrefs-v3";
+
+const ahrefs = new AhrefsClient("YOUR_API_TOKEN", {
+  timeout: 30_000,
+  headers: {
+    "User-Agent": "my-product/1.0.0",
+  },
+});
+```
+
+### Client options
+
+| Option | Type | Description |
+| --- | --- | --- |
+| `baseURL` | `string` | Optional API base URL. Defaults to `https://api.ahrefs.com/v3`. |
+| `timeout` | `number` | Request timeout in milliseconds. Internally uses `AbortController`. |
+| `headers` | `Record<string, string>` | Extra headers merged into each request. |
 
 ## Request shape
 
-All endpoint methods accept the same object:
+All endpoint methods accept the same request object:
 
 ```ts
 await ahrefs.siteExplorer.organicKeywords({
@@ -61,24 +104,25 @@ await ahrefs.siteExplorer.organicKeywords({
     limit: 100,
     output: "json",
   },
-  data: undefined, // used for POST, PUT, PATCH, DELETE bodies when the endpoint supports it
+  data: undefined, // JSON body for POST, PUT, PATCH, and DELETE endpoints when supported
   config: {
-    // optional request config, for example custom headers or signal
+    headers: {
+      "X-Request-ID": "request-123",
+    },
+    signal: abortController.signal,
   },
 });
 ```
 
-Every method returns an `AhrefsResponse`, so you can read `response.data`, `response.status`, and response headers.
+Every endpoint resolves to an `AhrefsResponse<T>`:
 
-## Client options
-
-```js
-const ahrefs = new AhrefsClient("YOUR_API_TOKEN", {
-  timeout: 30_000,
-  headers: {
-    "User-Agent": "my-app/1.0.0",
-  },
-});
+```ts
+type AhrefsResponse<T = unknown> = {
+  data: T;
+  status: number;
+  statusText: string;
+  headers: Record<string, string>;
+};
 ```
 
 ## Endpoint methods
@@ -167,12 +211,24 @@ const { data } = await ahrefs.public.crawlerIpRanges();
 console.log(data);
 ```
 
-## Documentation
+## Project structure
 
-See the official Ahrefs API v3 documentation for required parameters, response schemas, API unit consumption, and examples:
+The source is intentionally split by responsibility:
 
-- https://docs.ahrefs.com/en/api/docs/introduction
-- https://docs.ahrefs.com/en/api/reference/site-explorer
+```text
+src/
+├── client.ts                    # Top-level AhrefsClient composition
+├── constants.ts                 # Shared constants such as API_BASE_URL
+├── endpoints.ts                 # Endpoint definition lists
+├── http-client.ts               # Fetch-based HTTP transport
+├── index.ts                     # Public package entrypoint and exports
+├── resources/
+│   ├── base.ts                  # Base resource and generic endpoint registration
+│   └── site-explorer.ts         # Typed Site Explorer resource
+└── types.ts                     # Public/shared TypeScript types
+```
+
+Generated build output belongs in `dist/` and is intentionally ignored in git.
 
 ## Development
 
@@ -181,6 +237,20 @@ npm install
 npm test
 ```
 
+Useful scripts:
+
+| Command | Description |
+| --- | --- |
+| `npm run build` | Compile TypeScript into `dist/`. |
+| `npm test` | Build the package and run the Node.js test suite. |
+
+## Documentation
+
+See the official Ahrefs API v3 documentation for required parameters, response schemas, API unit consumption, and examples:
+
+- https://docs.ahrefs.com/en/api/docs/introduction
+- https://docs.ahrefs.com/en/api/reference/site-explorer
+
 ## License
 
-MIT
+This project is licensed under the [MIT License](./LICENSE).
