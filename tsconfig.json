@@ -1,15 +1,26 @@
 {
   "compilerOptions": {
-    "lib": ["ESNext", "DOM"],
-    "target": "ES6",
+    "lib": [
+      "ESNext",
+      "DOM"
+    ],
+    "target": "ES2020",
     "strict": true,
-    "module": "CommonJS",
+    "module": "Node16",
     "alwaysStrict": true,
-    "moduleResolution": "Node",
+    "moduleResolution": "Node16",
     "esModuleInterop": true,
     "outDir": "./dist",
-    "strictPropertyInitialization": false,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
-  }
+    "rootDir": "./src",
+    "declaration": true,
+    "sourceMap": true,
+    "skipLibCheck": true
+  },
+  "include": [
+    "src/**/*.ts"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules"
+  ]
 }
