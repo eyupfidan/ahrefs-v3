@@ -1,5 +1,5 @@
-import { AhrefsHttpClient } from "./http-client";
-import type { AhrefsClientOptions } from "./types";
+import { AhrefsHttpClient } from "./http-client.js";
+import type { AhrefsClientOptions } from "./types.js";
 import {
   brandRadarEndpoints,
   gscEndpoints,
@@ -10,9 +10,9 @@ import {
   siteAuditEndpoints,
   socialMediaEndpoints,
   webAnalyticsEndpoints,
-} from "./endpoints";
-import { GenericResource } from "./resources/base";
-import { SiteExplorer } from "./resources/site-explorer";
+} from "./endpoints.js";
+import { GenericResource } from "./resources/base.js";
+import { SiteExplorer } from "./resources/site-explorer.js";
 
 export class AhrefsClient {
   readonly siteExplorer: SiteExplorer;

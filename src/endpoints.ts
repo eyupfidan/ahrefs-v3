@@ -1,4 +1,4 @@
-import type { EndpointDefinition } from "./types";
+import type { EndpointDefinition } from "./types.js";
 
 export const keywordsExplorerEndpoints = [["overview", "GET", "/overview"], ["volumeHistory", "GET", "/volume-history"], ["volumeByCountry", "GET", "/volume-by-country"], ["matchingTerms", "GET", "/matching-terms"], ["relatedTerms", "GET", "/related-terms"], ["searchSuggestions", "GET", "/search-suggestions"]] as const;
 export const siteAuditEndpoints = [["projects", "GET", "/projects"], ["issues", "GET", "/issues"], ["pageContent", "GET", "/page-content"], ["pageExplorer", "GET", "/page-explorer"]] as const;

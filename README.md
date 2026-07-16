@@ -1,7 +1,7 @@
-# Ahrefs API v3 Node.js Client
+# Ahrefs API v3 Universal JavaScript Client
 
 <p align="center">
-  <strong>Type-friendly Ahrefs API v3 client for Node.js and TypeScript.</strong>
+  <strong>Type-friendly Ahrefs API v3 client for Node.js, React, Vue, and TypeScript.</strong>
 </p>
 
 <p align="center">
@@ -12,14 +12,14 @@
   <img alt="Node.js" src="https://img.shields.io/badge/Node.js-18%2B-339933.svg?style=flat-square">
 </p>
 
-`ahrefs-v3` is a small, modern SDK for calling the Ahrefs API v3 from JavaScript and TypeScript applications. It follows the Ahrefs API resource model and exposes ergonomic namespaces for Site Explorer, Keywords Explorer, Site Audit, Rank Tracker, SERP Overview, Batch Analysis, Subscription Information, Management, Brand Radar, Web Analytics, GSC Insights, Social Media, and Public endpoints.
+`ahrefs-v3` is a small, modern SDK for calling the Ahrefs API v3 from JavaScript and TypeScript applications, including Node.js runtimes and frontend frameworks such as React and Vue. It follows the Ahrefs API resource model and exposes ergonomic namespaces for Site Explorer, Keywords Explorer, Site Audit, Rank Tracker, SERP Overview, Batch Analysis, Subscription Information, Management, Brand Radar, Web Analytics, GSC Insights, Social Media, and Public endpoints.
 
 ## Highlights
 
 - **Typed request/response primitives** through shared TypeScript exports such as `AhrefsRequestOptions`, `AhrefsResponse`, and `RequestMethod`.
 - **Resource-based API surface** that mirrors Ahrefs API v3 namespaces, for example `ahrefs.siteExplorer.domainRating()`.
 - **Readable endpoint aliases** with both friendly method names and HTTP-verb aliases, for example `domainRating()` and `getDomainRating()`.
-- **Configurable transport layer** with custom base URL, timeout, headers, request body support, and `AbortSignal` support.
+- **Universal transport layer** with custom base URL, timeout, headers, request body support, `AbortSignal` support, and an injectable `fetch` implementation for browsers, SSR, tests, and proxy calls.
 - **Maintainable source layout** split into client composition, HTTP transport, endpoint definitions, resources, constants, and types.
 
 ## Installation
@@ -52,6 +52,30 @@ async function main() {
 
 main().catch(console.error);
 ```
+
+
+### React / Vue / browser usage
+
+The package publishes both CommonJS and ESM builds, so modern bundlers used by React, Vue, Vite, Nuxt, and similar tools can import it directly:
+
+```ts
+import { AhrefsClient } from "ahrefs-v3";
+
+const ahrefs = new AhrefsClient(import.meta.env.VITE_AHREFS_API_TOKEN, {
+  timeout: 30_000,
+});
+```
+
+For production frontend apps, avoid exposing long-lived Ahrefs API tokens in browser JavaScript. Prefer calling your own backend/API route and set `baseURL` to that proxy, or inject a custom `fetch` that forwards requests to your server:
+
+```ts
+const ahrefs = new AhrefsClient("browser-session-token", {
+  baseURL: "/api/ahrefs",
+  fetch: window.fetch.bind(window),
+});
+```
+
+The client itself does not depend on Node.js built-ins; it uses the runtime `fetch`, `URL`, `AbortController`, and `Headers` APIs that are available in modern browsers and frontend tooling.
 
 ### TypeScript / ESM
 
@@ -90,6 +114,7 @@ const ahrefs = new AhrefsClient("YOUR_API_TOKEN", {
 | `baseURL` | `string` | Optional API base URL. Defaults to `https://api.ahrefs.com/v3`. |
 | `timeout` | `number` | Request timeout in milliseconds. Internally uses `AbortController`. |
 | `headers` | `Record<string, string>` | Extra headers merged into each request. |
+| `fetch` | `(input, init) => Promise<Response>` | Optional fetch implementation for browsers, SSR runtimes, tests, or proxy adapters. |
 
 ## Request shape
 
@@ -110,6 +135,8 @@ await ahrefs.siteExplorer.organicKeywords({
       "X-Request-ID": "request-123",
     },
     signal: abortController.signal,
+    credentials: "include",
+    mode: "cors",
   },
 });
 ```
@@ -220,7 +247,7 @@ src/
 ├── client.ts                    # Top-level AhrefsClient composition
 ├── constants.ts                 # Shared constants such as API_BASE_URL
 ├── endpoints.ts                 # Endpoint definition lists
-├── http-client.ts               # Fetch-based HTTP transport
+├── http-client.ts               # Universal fetch-based HTTP transport
 ├── index.ts                     # Public package entrypoint and exports
 ├── resources/
 │   ├── base.ts                  # Base resource and generic endpoint registration

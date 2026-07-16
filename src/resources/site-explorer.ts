@@ -1,6 +1,6 @@
-import type { AhrefsHttpClient } from "../http-client";
-import type { RequestMethod } from "../types";
-import { AhrefsResource } from "./base";
+import type { AhrefsHttpClient } from "../http-client.js";
+import type { RequestMethod } from "../types.js";
+import { AhrefsResource } from "./base.js";
 
 export class SiteExplorer extends AhrefsResource {
   domainRating!: RequestMethod;

@@ -1,6 +1,6 @@
 const assert = require("node:assert/strict");
 const test = require("node:test");
-const AhrefsClient = require("../dist/index.js").default;
+const AhrefsClient = require("..").default;
 
 test("creates resource methods for current Ahrefs API v3 endpoints", () => {
   const client = new AhrefsClient("test-token", { baseURL: "https://example.test" });
@@ -29,4 +29,30 @@ test("exposes generated method aliases that include HTTP verbs", () => {
   assert.equal(typeof client.management.postProjects, "function");
   assert.equal(typeof client.management.patchUpdateProject, "function");
   assert.equal(typeof client.socialMedia.deletePost, "function");
+});
+
+test("supports injected fetch implementations for browser and framework runtimes", async () => {
+  const calls = [];
+  const client = new AhrefsClient("test-token", {
+    baseURL: "https://example.test",
+    fetch: async (input, init) => {
+      calls.push({ input, init });
+      return new Response(JSON.stringify({ ok: true }), {
+        status: 200,
+        headers: { "content-type": "application/json" },
+      });
+    },
+  });
+
+  const response = await client.siteExplorer.domainRating({
+    params: { target: "ahrefs.com", output: "json" },
+    config: { credentials: "include", mode: "cors" },
+  });
+
+  assert.deepEqual(response.data, { ok: true });
+  assert.equal(calls.length, 1);
+  assert.equal(calls[0].input.href, "https://example.test/site-explorer/domain-rating?target=ahrefs.com&output=json");
+  assert.equal(calls[0].init.credentials, "include");
+  assert.equal(calls[0].init.mode, "cors");
+  assert.equal(calls[0].init.headers.Authorization, "Bearer test-token");
 });

@@ -1,15 +1,15 @@
 {
   "name": "ahrefs-v3",
   "version": "1.1.0",
-  "description": "A type-friendly Node.js client for the Ahrefs API v3 endpoints.",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "description": "A type-friendly universal JavaScript client for the Ahrefs API v3 endpoints.",
+  "main": "./dist/cjs/index.js",
+  "types": "./dist/esm/index.d.ts",
   "files": [
     "dist",
     "README.md"
   ],
   "scripts": {
-    "build": "tsc",
+    "build": "rm -rf dist && tsc -p tsconfig.json && tsc -p tsconfig.esm.json && node scripts/write-esm-package.cjs",
     "test": "npm run build && node --test test"
   },
   "repository": {
@@ -22,9 +22,13 @@
     "v3",
     "seo",
     "analysis",
-    "data"
+    "data",
+    "browser",
+    "react",
+    "vue",
+    "frontend"
   ],
-  "author": "Ey\u00fcp Fidan",
+  "author": "Eyüp Fidan",
   "license": "MIT",
   "bugs": {
     "url": "https://github.com/eyupfidan/ahrefs-v3/issues"
@@ -33,5 +37,14 @@
   "devDependencies": {
     "@types/node": "^26.1.1",
     "typescript": "^6.0.3"
+  },
+  "module": "./dist/esm/index.js",
+  "exports": {
+    ".": {
+      "types": "./dist/esm/index.d.ts",
+      "import": "./dist/esm/index.js",
+      "require": "./dist/cjs/index.js",
+      "default": "./dist/esm/index.js"
+    }
   }
 }

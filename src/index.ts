@@ -1,8 +1,8 @@
-export { API_BASE_URL } from "./constants";
-export { AhrefsClient, AhrefsClient as Ahrefs } from "./client";
-export { AhrefsHttpClient } from "./http-client";
-export { AhrefsResource, GenericResource } from "./resources/base";
-export { SiteExplorer } from "./resources/site-explorer";
+export { API_BASE_URL } from "./constants.js";
+export { AhrefsClient, AhrefsClient as Ahrefs } from "./client.js";
+export { AhrefsHttpClient } from "./http-client.js";
+export { AhrefsResource, GenericResource } from "./resources/base.js";
+export { SiteExplorer } from "./resources/site-explorer.js";
 export type {
   AhrefsBody,
   AhrefsClientOptions,
@@ -14,6 +14,6 @@ export type {
   EndpointDefinition,
   Method,
   RequestMethod,
-} from "./types";
+} from "./types.js";
 
-export { AhrefsClient as default } from "./client";
+export { AhrefsClient as default } from "./client.js";

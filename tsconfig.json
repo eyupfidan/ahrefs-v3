@@ -1,26 +1,8 @@
 {
+  "extends": "./tsconfig.base.json",
   "compilerOptions": {
-    "lib": [
-      "ESNext",
-      "DOM"
-    ],
-    "target": "ES2020",
-    "strict": true,
     "module": "Node16",
-    "alwaysStrict": true,
     "moduleResolution": "Node16",
-    "esModuleInterop": true,
-    "outDir": "./dist",
-    "rootDir": "./src",
-    "declaration": true,
-    "sourceMap": true,
-    "skipLibCheck": true
-  },
-  "include": [
-    "src/**/*.ts"
-  ],
-  "exclude": [
-    "dist",
-    "node_modules"
-  ]
+    "outDir": "./dist/cjs"
+  }
 }
