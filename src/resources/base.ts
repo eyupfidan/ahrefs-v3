@@ -1,5 +1,5 @@
-import type { AhrefsHttpClient } from "../http-client";
-import type { AhrefsBody, AhrefsParams, AhrefsRequestOptions, AhrefsResponse, EndpointDefinition, Method, RequestMethod } from "../types";
+import type { AhrefsHttpClient } from "../http-client.js";
+import type { AhrefsBody, AhrefsParams, AhrefsRequestOptions, AhrefsResponse, EndpointDefinition, Method, RequestMethod } from "../types.js";
 
 const toMethodName = (method: Method, path: string): string => {
   const normalizedMethod = method.toLowerCase();
